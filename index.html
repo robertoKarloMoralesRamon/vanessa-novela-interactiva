@@ -4,210 +4,283 @@
 <meta charset="UTF-8">
 <title>Alimentación Saludable - Mentes Brillantes</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
- body { font-family: Arial, sans-serif; background: #f0f8ff; margin:0; padding:0; }
- h1 { font-size: 2.2rem; text-align:center; margin-top:30px; }
- h2 { font-size: 1.4rem; }
- #inicio { text-align:center; padding:40px; }
- .btn { padding:15px 30px; background:#4caf50; color:#fff; border:none; border-radius:12px; font-size:1.2rem; cursor:pointer; }
- #menu { display:none; text-align:center; padding:40px; }
- #dialogoSection { display:none; padding:20px; text-align:center; }
- #dialogoImg { width:280px; }
- #globo { max-width:80%; margin:20px auto; padding:20px; background:white; border-radius:20px; font-size:1.3rem; line-height:1.4; }
- #info { display:none; padding:25px; font-size:1.2rem; }
+body {
+    font-family: Arial, sans-serif;
+    background: #e8f7ff;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- PANTALLAS --- */
+section { display: none; }
+#inicio { display: block; text-align:center; padding:40px; }
+h1 { font-size: 2.3rem; margin-top:20px; }
+h2 { font-size: 1.6rem; }
+
+.btn {
+    padding: 15px 28px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.btn:hover { background:#43a047; }
+
+#dialogoSection { text-align:center; padding:20px; }
+#dialogoImg { width:280px; margin-top:15px; }
+
+#globo {
+    max-width: 85%;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    box-shadow: 0 0 10px #0002;
+}
+
+#info {
+    padding: 25px;
+    font-size: 1.1rem;
+}
+
+/* --- JUEGO --- */
+#game-screen {
+    display: none;
+    text-align: center;
+    padding: 30px;
+}
+
+.btn-secondary {
+    padding: 12px 22px;
+    background: #008CBA;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 10px;
+}
+.btn-secondary:hover { background:#007bb0; }
+
+.btn-exit {
+    padding: 12px 22px;
+    background: #c62828;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 20px;
+}
 </style>
 </head>
+
 <body>
 
-<!-- PANTALLA INICIO -->
+<!-- =========================
+        PANTALLA INICIO
+========================== -->
 <section id="inicio">
-  <h1>Alimentación saludable<br>Mentes Brillantes</h1>
-  <h3>Aplicación interactiva</h3>
+  <h1>Alimentación Saludable</h1>
+  <h2>Mentes Brillantes</h2>
+  <p>Aplicación Interactiva</p>
   <button class="btn" onclick="mostrarMenu()">Iniciar</button>
 </section>
 
-<!-- MENU PRINCIPAL -->
+<!-- ========================
+          MENÚ
+=========================== -->
 <section id="menu">
-  <h2>Menú principal</h2>
-  <button class="btn" onclick="iniciarDialogos()">Historia con Vanessa</button><br><br>
-  <button class="btn" onclick="mostrarInfo()">Información</button><br><br>
+  <h2>Menú Principal</h2>
+
+  <button class="btn" onclick="iniciarDialogos()">Historia con Vanessa</button><br>
+  <button class="btn" onclick="mostrarInfo()">Información</button><br>
+  <button class="btn" onclick="abrirJuego()">Jugar</button>
 </section>
 
-<!-- DIALOGOS -->
+<!-- ========================
+         DIÁLOGOS
+=========================== -->
 <section id="dialogoSection">
-  <img id="dialogoImg" src="feliz.png">
+  <img id="dialogoImg" src="assets/vanessa/feliz.png">
   <div id="globo"></div>
-  <button class="btn" onclick="siguienteDialogo()">Siguiente</button>
-  <br><br>
+  <button class="btn" onclick="siguienteDialogo()">Siguiente</button><br><br>
   <button class="btn" onclick="volverMenu()">Volver al menú</button>
 </section>
 
-<!-- INFORMACIÓN -->
+<!-- ========================
+       INFORMACIÓN
+=========================== -->
 <section id="info"></section>
 
+<!-- ========================
+       JUEGO SIMPLE
+=========================== -->
+<section id="game-screen">
+  <h1>Juego: Adivina lo Saludable</h1>
+  <p id="game-question" style="font-size:24px;"></p>
+  <button class="btn-secondary" onclick="answer(true)">Opción 1</button>
+  <button class="btn-secondary" onclick="answer(false)">Opción 2</button><br>
+  <button class="btn-exit" onclick="salirJuego()">Salir</button>
+</section>
+
 <script>
-// ---------------------
-//     DIALOGOS
-// ---------------------
+/* =============================
+      DIALOGOS DE VANESSA
+============================= */
 
 const dialogosVanessa = [
- { emocion:"feliz", texto:"¡Hola, hola, hola a todos! ¡Qué alegría ver tantas caritas por aquí! Yo soy Vanessa, su amiga aventurera del mundo de la comida saludable."},
- { emocion:"determinada", texto:"Y hoy… ¡les voy a contar algo súper importante que puede cambiar su vida para siempre! ¿Quieren saberlo? ¡Eso quería escuchar!"},
- { emocion:"neutra", texto:"A ver… muchos creen que comer saludable es solo verduras. ¡Pues no! Es mucho más que eso."},
- { emocion:"determinada", texto:"Es como darle a tu cuerpo el mejor combustible para ser la mejor versión de ti mismo."},
- { emocion:"feliz", texto:"Imaginen que su cuerpo es un carro de carreras: poderoso, brillante y veloz."},
- { emocion:"triste", texto:"¿Qué pasaría si le ponemos gasolina chafa? El carro falla, se apaga o no avanza."},
- { emocion:"feliz", texto:"Pero con gasolina buena… ¡fiuuum! ¡Corre increíble! Igual ustedes cuando comen bien."},
- { emocion:"feliz", texto:"Tienen energía, piensan mejor, corren más y son más felices."},
- { emocion:"feliz", texto:"Ahora les presentaré a los héroes de la alimentación saludable"},
- { emocion:"determinada", texto:"Frutas: vitaminas. Verduras: fuerza. Agua: poder mágico."},
- { emocion:"determinada", texto:"Cereales: energía. Proteínas: músculos fuertes."},
- { emocion:"feliz", texto:"Cuando comes todo eso, tu cuerpo dice: ‘¡Gracias! Hoy me siento increíble’."},
+ { emocion:"feliz", texto:"¡Hola, hola, hola a todos! ¡Qué emoción verlos aquí! Soy Vanessa, su amiga aventurera del mundo de la comida saludable."},
+ { emocion:"determinada", texto:"Hoy les voy a compartir algo súper importante que puede cambiar su vida. ¿Listos? ¡Eso quería escuchar!"},
+ { emocion:"neutra", texto:"Muchos creen que comer saludable es solo verdura... pero no es así."},
+ { emocion:"determinada", texto:"Comer bien es darle a tu cuerpo el mejor combustible para ser la mejor versión de ti."},
+ { emocion:"feliz", texto:"Imaginen que su cuerpo es un carro de carreras: poderoso y veloz."},
+ { emocion:"triste", texto:"Si le pones gasolina chafa… el carro se apaga."},
+ { emocion:"feliz", texto:"Pero si le das gasolina buena… ¡fiummm! ¡Corre increíble! Igual ustedes cuando comen bien."},
+ { emocion:"feliz", texto:"Tienen energía, piensan mejor, corren más y están felices."},
+ { emocion:"feliz", texto:"Les presentaré a los héroes de la alimentación saludable."},
+ { emocion:"determinada", texto:"Frutas = vitaminas. Verduras = fuerza. Agua = poder mágico."},
+ { emocion:"determinada", texto:"Cereales = energía. Proteínas = músculos."},
+ { emocion:"feliz", texto:"Cuando comes esto, tu cuerpo dice: ¡Gracias! Me siento increíble."},
  { emocion:"enojada", texto:"Pero cuidado: la comida chatarra no ayuda mucho."},
- { emocion:"neutra", texto:"No digo que nunca la comas, pero no diario."},
- { emocion:"feliz", texto:"Yo también he comido papitas… o diez. Ups."},
- { emocion:"triste", texto:"Pero si la comemos diario, el cuerpo se siente lento y triste."},
- { emocion:"determinada", texto:"Aquí van consejos poderosos:"},
+ { emocion:"neutra", texto:"No digo que nunca la comas, solo no diario."},
+ { emocion:"feliz", texto:"Yo también he comido papitas… o diez."},
+ { emocion:"triste", texto:"Pero si es diario, tu cuerpo se pone lento y triste."},
+ { emocion:"determinada", texto:"Consejos poderosos:"},
  { emocion:"feliz", texto:"Toma más agua que refresco."},
- { emocion:"feliz", texto:"Lleva una fruta en tu mochila."},
+ { emocion:"feliz", texto:"Lleva fruta en tu mochila."},
  { emocion:"feliz", texto:"Come colores: rojo, verde, naranja, amarillo."},
- { emocion:"determinada", texto:"Muévete: corre, baila, camina… ¡lo que quieras!"},
- { emocion:"neutra", texto:"Duerme rico y suficiente."},
- { emocion:"feliz", texto:"Tu cuerpo es único, especial y maravilloso."},
- { emocion:"neutra", texto:"Cada comida saludable es un acto de amor propio."},
- { emocion:"determinada", texto:"Pueden ser fuertes, inteligentes y creativos."},
- { emocion:"feliz", texto:"Yo creo en ustedes."},
- { emocion:"feliz", texto:"Gracias por escucharme. ¡Coman rico y vivan con energía!"}
+ { emocion:"determinada", texto:"Muévete: corre, baila, juega… ¡lo que quieras!"},
+ { emocion:"neutra", texto:"Duerme bien y suficiente."},
+ { emocion:"feliz", texto:"Tu cuerpo es único y especial."},
+ { emocion:"neutra", texto:"Cada comida saludable es amor propio."},
+ { emocion:"determinada", texto:"Puedes ser fuerte, inteligente y creativo."},
+ { emocion:"feliz", texto:"Yo creo en ti."},
+ { emocion:"feliz", texto:"¡Gracias por escucharme! ¡Coman rico y vivan con energía!"}
 ];
 
 let indice = 0;
-const imgElement = document.getElementById("dialogoImg");
-const globo = document.getElementById("globo");
 
 function mostrarMenu(){
- document.getElementById("inicio").style.display = "none";
- document.getElementById("menu").style.display = "block";
+  document.querySelectorAll("section").forEach(s => s.style.display="none");
+  document.getElementById("menu").style.display="block";
 }
 
 function iniciarDialogos(){
- indice = 0;
- document.getElementById("menu").style.display = "none";
- document.getElementById("dialogoSection").style.display = "block";
- mostrarDialogo();
+  indice = 0;
+  document.querySelectorAll("section").forEach(s => s.style.display="none");
+  document.getElementById("dialogoSection").style.display="block";
+  mostrarDialogo();
 }
 
 function mostrarDialogo(){
- let d = dialogosVanessa[indice];
- imgElement.src = d.emocion + ".png"; // Usa solo los PNG existentes
- globo.innerHTML = "";
- escribirEfecto(d.texto, globo);
+  const d = dialogosVanessa[indice];
+  document.getElementById("dialogoImg").src = "assets/vanessa/" + d.emocion + ".png";
+  escribirEfecto(d.texto, document.getElementById("globo"));
 }
 
 function siguienteDialogo(){
- indice++;
- if(indice >= dialogosVanessa.length){ volverMenu(); return; }
- mostrarDialogo();
+  indice++;
+  if(indice >= dialogosVanessa.length){ volverMenu(); return; }
+  mostrarDialogo();
 }
 
 function volverMenu(){
- document.getElementById("dialogoSection").style.display = "none";
- document.getElementById("menu").style.display = "block";
+  mostrarMenu();
 }
 
-// EFECTO DE TEXTO
+/* EFECTO TEXTO */
 function escribirEfecto(texto, elemento){
- let i = 0;
- let interval = setInterval(()=>{
-  elemento.innerHTML = texto.slice(0, i);
-  i++;
-  if(i > texto.length){ clearInterval(interval); }
- }, 25);
+  let i = 0;
+  elemento.innerHTML = "";
+  const interval = setInterval(()=>{
+    elemento.innerHTML = texto.slice(0, i);
+    i++;
+    if(i > texto.length) clearInterval(interval);
+  }, 25);
 }
 
-// INFORMACIÓN
+/* =============================
+         INFORMACIÓN
+============================= */
 const informacionApp = `
 <h1>Información importante</h1>
 <h2>¿Por qué comer saludable?</h2>
-<p>Tu cuerpo necesita combustible de calidad para funcionar bien: energía, concentración, fuerza y buen ánimo.</p>
-<h2>Beneficios</h2>
+<p>Comer bien mejora tu energía, concentración, fuerza, memoria y estado de ánimo.</p>
+
+<h2>Beneficios:</h2>
 <ul>
-<li>Más energía diaria</li>
-<li>Mejor memoria y concentración</li>
-<li>Mejor sueño</li>
-<li>Mejor estado de ánimo</li>
+<li>Más energía</li>
+<li>Mejor memoria</li>
+<li>Mejor sistema inmune</li>
+<li>Menos cansancio</li>
+<li>Mejores emociones</li>
 </ul>
-<h2>Consejos diarios</h2>
+
+<h2>Hábitos diarios recomendados:</h2>
 <ul>
 <li>Tomar 6–8 vasos de agua</li>
-<li>Comer frutas y verduras todos los días</li>
+<li>Comer frutas y verduras a diario</li>
 <li>Dormir 8–10 horas</li>
 <li>Hacer 30 minutos de actividad física</li>
-</ul>`;
+<li>Reducir refrescos y dulces</li>
+</ul>
+`;
 
 function mostrarInfo(){
- document.getElementById("menu").style.display="none";
- let area = document.getElementById("info");
- area.style.display = "block";
- area.innerHTML = informacionApp + '<br><br><button class="btn" onclick="volverInfoMenu()">Volver</button>';
+  document.querySelectorAll("section").forEach(s => s.style.display="none");
+  const area = document.getElementById("info");
+  area.style.display = "block";
+  area.innerHTML = informacionApp + '<button class="btn" onclick="volverMenu()">Volver</button>';
 }
 
-function volverInfoMenu(){
- document.getElementById("info").style.display="none";
- document.getElementById("menu").style.display="block";
-}
-</script>
-  <!-- JUEGO SIMPLE AGREGADO -->
-  <div id="game-screen" class="screen hidden">
-    <h1 class="title">Juego: Adivina lo Saludable</h1>
-    <p id="game-question" style="font-size:24px; margin-bottom:20px;"></p>
-    <button class="btn-secondary" onclick="answer(true)">Opción 1</button>
-    <button class="btn-secondary" onclick="answer(false)">Opción 2</button>
-    <br>
-    <button class="btn-exit" onclick="exitGame()">Salir</button>
-  </div>
-
-<script>
-let gameIndex = 0;
+/* =============================
+            JUEGO
+============================= */
 const gameData = [
-  { q: "¿Qué es más saludable?", o1: "Manzana", o2: "Dulces", correct: true },
-  { q: "¿Qué es mejor para hidratarte?", o1: "Refresco", o2: "Agua", correct: false },
-  { q: "¿Qué te da más energía real?", o1: "Semillas", o2: "Papas fritas", correct: true }
+  { q:"¿Qué es más saludable?", o1:"Manzana", o2:"Dulces", correct:true },
+  { q:"¿Qué hidrata más?", o1:"Refresco", o2:"Agua", correct:false },
+  { q:"¿Qué da energía real?", o1:"Semillas", o2:"Papas fritas", correct:true }
 ];
+let gameIndex = 0;
 
-function openGame() {
-  document.getElementById("menu-screen").classList.add("hidden");
-  document.getElementById("game-screen").classList.remove("hidden");
+function abrirJuego() {
+  document.querySelectorAll("section").forEach(s => s.style.display="none");
+  document.getElementById("game-screen").style.display="block";
   gameIndex = 0;
-  loadQuestion();
+  cargarPregunta();
 }
 
-function loadQuestion() {
+function cargarPregunta(){
   const q = gameData[gameIndex];
   document.getElementById("game-question").innerText = q.q;
-  const buttons = document.querySelectorAll('#game-screen button');
-  buttons[0].innerText = q.o1;
-  buttons[1].innerText = q.o2;
+  const btns = document.querySelectorAll("#game-screen button");
+  btns[0].innerText = q.o1;
+  btns[1].innerText = q.o2;
 }
 
-function answer(option) {
-  const correct = gameData[gameIndex].correct;
-  if (option === correct) {
-    alert("¡Correcto! Muy bien.");
-  } else {
-    alert("Ups, intenta de nuevo.");
-  }
+function answer(option){
+  const correcto = gameData[gameIndex].correct;
+  if(option === correcto) alert("¡Correcto!");
+  else alert("Incorrecto, intenta otra vez.");
+
   gameIndex++;
-  if (gameIndex >= gameData.length) {
+  if(gameIndex >= gameData.length){
     alert("¡Terminaste el juego!");
-    exitGame();
-  } else {
-    loadQuestion();
-  }
+    salirJuego();
+  } else cargarPregunta();
 }
 
-function exitGame() {
-  document.getElementById("game-screen").classList.add("hidden");
-  document.getElementById("menu-screen").classList.remove("hidden");
+function salirJuego(){
+  mostrarMenu();
 }
 </script>
 
