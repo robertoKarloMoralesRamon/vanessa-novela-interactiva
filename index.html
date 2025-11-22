@@ -9,19 +9,9 @@ Instrucciones rápidas:
    - assets/vanessa_triste.png
    - assets/vanessa_determinada.png
    - (Opcional) assets/background.png  -> fondo extra para la pantalla de diálogo
-3) Haz commit y push al repositorio. Luego activa GitHub Pages en la rama (main) desde Settings > Pages, o usa gh-pages.
+3) Haz commit y push al repositorio. Luego activa GitHub Pages en la rama (main) desde Settings > Pages.
 4) Si Cooper Black no aparece en tu equipo, el estilo usa fallback a 'Arial Black' / 'Impact'. Si quieres la fuente exacta, sube una WOFF/TTF y modifica la @font-face en el CSS.
-
-Contenido: aplicación estática que incluye:
- - Pantalla de inicio (fondo verde, botón naranja "Iniciar" en tipografía Cooper Black)
- - Menú con 3 opciones: Juegos, Información, Historia (dialogo con Vanessa)
- - Juego: mover canasta con flechas, atrapar emojis de frutas y verduras (puntaje)
- - Información: pantalla scroll con texto educativo
- - Historia: muestra el guion que proporcionaste, alternando la imagen PNG según emoción. Botón "Siguiente" para avanzar el diálogo.
-
-¡Mucho éxito! Si quieres que lo suba a tu repo (no tengo acceso directo), te explico paso a paso cómo hacer push o crear el repo desde GitHub.
 -->
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -30,8 +20,8 @@ Contenido: aplicación estática que incluye:
   <title>Vanessa - Novela Gráfica Interactiva</title>
   <style>
     :root{
-      --green:#9be89b; /* fondo inicial */
-      --orange:#ff8c2b; /* boton */
+      --green:#9be89b;
+      --orange:#ff8c2b;
       --card-bg: rgba(255,255,255,0.9);
       --accent:#2b8a3e;
       --ui-radius:14px;
@@ -39,41 +29,86 @@ Contenido: aplicación estática que incluye:
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0}
-    body{background:var(--green);display:flex;align-items:center;justify-content:center;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;}
+    body{
+      background:var(--green);
+      display:flex;align-items:center;justify-content:center;
+      font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;
+    }
 
     /* Start screen */
-    .start-screen{width:100%;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column}
-    .start-button{background:var(--orange);border-radius:18px;padding:28px 48px;border:none;font-size:36px;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,0.2);color:white;}
-    .start-button:active{transform:translateY(1px)}
+    .start-screen{
+      width:100%;height:100vh;
+      display:flex;align-items:center;justify-content:center;flex-direction:column
+    }
+    .start-button{
+      background:var(--orange);
+      border-radius:18px;
+      padding:28px 48px;border:none;font-size:36px;
+      cursor:pointer;color:white;
+      box-shadow:0 8px 18px rgba(0,0,0,0.2);
+    }
 
     /* App shell */
-    .app{display:none;max-width:1000px;width:100%;height:100vh;background:linear-gradient(180deg,#f6fff6, #e8f6ea);border-radius:20px;box-shadow:0 12px 30px rgba(0,0,0,0.15);overflow:hidden}
-    header{height:84px;background:var(--accent);color:white;display:flex;align-items:center;padding:12px 20px;gap:16px}
-    header h1{margin:0;font-size:24px;font-family:'Cooper Black','Arial Black',Impact, sans-serif}
+    .app{
+      display:none;
+      max-width:1000px;width:100%;height:100vh;
+      background:linear-gradient(180deg,#f6fff6, #e8f6ea);
+      border-radius:20px;overflow:hidden;
+      box-shadow:0 12px 30px rgba(0,0,0,0.15);
+      position:relative;
+    }
+    header{
+      height:84px;background:var(--accent);color:white;
+      display:flex;align-items:center;padding:12px 20px;gap:16px
+    }
     nav{display:flex;gap:8px;margin-left:auto}
-    nav button{background:transparent;border:2px solid rgba(255,255,255,0.2);color:white;padding:8px 12px;border-radius:10px;cursor:pointer}
+    nav button{
+      background:transparent;border:2px solid rgba(255,255,255,0.2);
+      color:white;padding:8px 12px;border-radius:10px;cursor:pointer
+    }
 
     main{padding:18px;height:calc(100vh - 84px);overflow:auto}
     .screen{display:none;height:100%}
     .active{display:block}
 
-    /* Game styles */
-    #game-canvas{background:linear-gradient(#fff,#f0fff0);display:block;margin:0 auto;border-radius:12px;border:4px solid #dff0d8}
-    .score-board{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;margin-top:10px}
+    /* Game */
+    #game-canvas{
+      background:linear-gradient(#fff,#f0fff0);
+      display:block;margin:0 auto;border-radius:12px;
+      border:4px solid #dff0d8
+    }
+    .score-board{
+      display:flex;justify-content:space-between;
+      align-items:center;padding:8px 12px;margin-top:10px
+    }
 
-    /* Info page */
-    .info-card{background:var(--card-bg);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    /* Info */
+    .info-card{
+      background:var(--card-bg);padding:18px;border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.06)
+    }
 
-    /* Story page */
-    .story-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .char-img{width:260px;height:260px;object-fit:contain;border-radius:18px;border:6px solid rgba(255,255,255,0.8);background:transparent}
-    .balloon{max-width:760px;background:white;border-radius:18px;padding:16px;font-size:18px;box-shadow:0 8px 18px rgba(0,0,0,0.1)}
+    /* Story */
+    .story-wrap{
+      display:flex;flex-direction:column;
+      align-items:center;gap:12px
+    }
+    .char-img{
+      width:260px;height:260px;object-fit:contain;
+      border-radius:18px;border:6px solid rgba(255,255,255,0.8)
+    }
+    .balloon{
+      max-width:760px;background:white;border-radius:18px;
+      padding:16px;font-size:18px;box-shadow:0 8px 18px rgba(0,0,0,0.1)
+    }
     .controls{display:flex;gap:8px}
     .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
 
-    footer{position:absolute;right:12px;bottom:12px;font-size:12px;color:#666}
+    footer{
+      position:absolute;right:12px;bottom:12px;
+      font-size:12px;color:#666
+    }
 
-    /* Responsive */
     @media (max-width:700px){
       .char-img{width:180px;height:180px}
       .balloon{font-size:16px}
@@ -87,7 +122,8 @@ Contenido: aplicación estática que incluye:
     <button id="startBtn" class="start-button">Iniciar</button>
   </div>
 
-  <div class="app" id="appShell" role="application" aria-label="Vanessa app">
+  <div class="app" id="appShell">
+
     <header>
       <h1>Vanessa - Comiendo con Energía</h1>
       <nav>
@@ -96,44 +132,48 @@ Contenido: aplicación estática que incluye:
         <button data-screen="story">Historia</button>
       </nav>
     </header>
+
     <main>
-      <!-- Game Screen -->
+
+      <!-- GAME -->
       <section id="game" class="screen">
         <div class="score-board">
           <div>Puntaje: <span id="score">0</span></div>
           <div>Vidas: <span id="lives">3</span></div>
         </div>
         <canvas id="game-canvas" width="820" height="420"></canvas>
-        <p style="text-align:center;margin-top:10px">Controles: ← y → mover canasta. Atrapa frutas y verduras 🍎🍌🥕🥦🍇</p>
+        <p style="text-align:center;margin-top:10px">
+          Controles: ← y → mover canasta. Atrapa frutas y verduras 🍎🍌🥕🥦🍇
+        </p>
       </section>
 
-      <!-- Info Screen -->
+      <!-- INFO -->
       <section id="info" class="screen">
         <div class="info-card">
           <h2>¿Por qué es importante comer saludable?</h2>
-          <p>Comer alimentos variados y coloridos le da a tu cuerpo las vitaminas y energía necesarias para aprender, jugar y crecer. Aquí algunos puntos clave:</p>
+          <p>Comer alimentos variados y coloridos le da a tu cuerpo las vitaminas y energía necesarias para aprender, jugar y crecer.</p>
           <ul>
             <li>Frutas y verduras: vitaminas y minerales.</li>
-            <li>Agua: mantiene el cuerpo hidratado y ayuda al cerebro.</li>
-            <li>Proteínas: ayudan a crecer y reparar músculos.</li>
-            <li>Cereales y granos: energía sostenida para jugar.</li>
-            <li>Evitar exceso de comida chatarra: consumirla ocasionalmente está bien, pero en exceso puede hacerte sentir cansado.</li>
+            <li>Agua: mantiene el cuerpo hidratado.</li>
+            <li>Proteínas: ayudan a crecer.</li>
+            <li>Cereales: energía para jugar.</li>
           </ul>
-          <h3>Consejitos fáciles</h3>
+          <h3>Consejos</h3>
           <ol>
-            <li>Llena la mitad de tu plato con verduras y frutas.</li>
-            <li>Lleva una fruta en la mochila para el recreo.</li>
-            <li>Bebe agua en vez de refrescos la mayoría del tiempo.</li>
-            <li>Mueve tu cuerpo: sal a jugar, correr o bailar.</li>
+            <li>Llena la mitad del plato de frutas y verduras.</li>
+            <li>Lleva una fruta al recreo.</li>
+            <li>Bebe agua en vez de refrescos.</li>
+            <li>Muévete todos los días.</li>
           </ol>
         </div>
       </section>
 
-      <!-- Story Screen -->
+      <!-- STORY -->
       <section id="story" class="screen">
         <div class="story-wrap">
           <img id="charImg" class="char-img" src="assets/vanessa_neutra.png" alt="Vanessa">
           <div id="balloon" class="balloon">Pulsa Siguiente para comenzar la historia con Vanessa.</div>
+
           <div class="controls">
             <button id="prevBtn" class="btn">Anterior</button>
             <button id="nextBtn" class="btn">Siguiente</button>
@@ -142,175 +182,189 @@ Contenido: aplicación estática que incluye:
       </section>
 
     </main>
+
     <footer>Hecho con cariño para tu proyecto escolar</footer>
+
   </div>
 
-  <script>
-    // App wiring
-    const startBtn = document.getElementById('startBtn');
-    const startScreen = document.getElementById('startScreen');
-    const appShell = document.getElementById('appShell');
-    const navButtons = document.querySelectorAll('nav button');
-    const screens = document.querySelectorAll('.screen');
+<script>
+/* ------------------ Navegación ------------------ */
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
+const appShell = document.getElementById('appShell');
+const navButtons = document.querySelectorAll('nav button');
+const screens = document.querySelectorAll('.screen');
 
-    startBtn.addEventListener('click', ()=>{
-      startScreen.style.display='none';
-      appShell.style.display='block';
-      showScreen('game');
-    });
+startBtn.addEventListener('click', ()=>{
+  startScreen.style.display='none';
+  appShell.style.display='block';
+  showScreen('game');
+});
 
-    navButtons.forEach(b=>b.addEventListener('click', ()=>showScreen(b.dataset.screen)));
+navButtons.forEach(b=>b.addEventListener('click', ()=>showScreen(b.dataset.screen)));
 
-    function showScreen(id){
-      screens.forEach(s=>s.classList.remove('active'));
-      const el = document.getElementById(id);
-      if(el) el.classList.add('active');
-      // pause game if not visible
-      if(id !== 'game') gamePause(); else gameResume();
+function showScreen(id){
+  screens.forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+
+  if(id !== 'game') gamePause();
+  else gameResume();
+}
+
+/* ------------------ Juego ------------------ */
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+let scoreEl = document.getElementById('score');
+let livesEl = document.getElementById('lives');
+
+const state = {score:0,lives:3,running:false}
+
+const basket = {x:canvas.width/2 - 40,y:canvas.height-50,w:100,h:34,speed:8}
+const items = [];
+const fruits = ['🍎','🍌','🍇','🍐','🥕','🥦'];
+
+function spawnItem(){
+  const emoji = fruits[Math.floor(Math.random()*fruits.length)];
+  const size = 34 + Math.random()*18;
+  items.push({x:Math.random()*(canvas.width-40)+20,y:-40,vy:1.6+Math.random()*2,size,emoji});
+}
+
+let frames=0;
+function updateGame(){
+  if(!state.running) return;
+  frames++;
+  if(frames % 40 === 0) spawnItem();
+
+  items.forEach(it=>{
+    it.y += it.vy + Math.min(3, state.score/10);
+  });
+
+  for(let i=items.length-1;i>=0;i--){
+    const it = items[i];
+    if(it.y > canvas.height){
+      items.splice(i,1);
+      state.lives--;
+      livesEl.textContent = state.lives;
+      if(state.lives<=0) gameOver();
+    } else if(it.y + it.size > basket.y && it.x > basket.x && it.x < basket.x + basket.w){
+      state.score += 10;
+      scoreEl.textContent = state.score;
+      items.splice(i,1);
     }
+  }
 
-    // ---------------- Game: canasta que atrapa emojis ----------------
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-    let scoreEl = document.getElementById('score');
-    let livesEl = document.getElementById('lives');
+  draw();
+  requestAnimationFrame(updateGame);
+}
 
-    const state = {score:0,lives:3,running:false}
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Basket
-    const basket = {x:canvas.width/2 - 40,y:canvas.height-50,w:100,h:34,speed:8}
+  ctx.font='28px serif';
+  items.forEach(it=>ctx.fillText(it.emoji, it.x, it.y));
 
-    // Falling items
-    const items = [];
-    const fruits = ['🍎','🍌','🍇','🍐','🥕','🥦'];
+  ctx.fillStyle='#8b5a2b';
+  ctx.fillRect(basket.x, basket.y, basket.w, basket.h);
+  ctx.fillStyle='#fff';
+  ctx.font='18px sans-serif';
+  ctx.fillText('🧺', basket.x + basket.w/2 - 10, basket.y + 24);
+}
 
-    function spawnItem(){
-      const emoji = fruits[Math.floor(Math.random()*fruits.length)];
-      const size = 34 + Math.random()*18;
-      items.push({x:Math.random()*(canvas.width-40)+20,y:-40,vy:1.6+Math.random()*2,size,emoji});
-    }
+const keys = {};
+window.addEventListener('keydown', e=>{
+  keys[e.key]=true;
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight') e.preventDefault();
+  moveBasket();
+});
+window.addEventListener('keyup', e=>keys[e.key]=false);
 
-    let frames=0;
-    function updateGame(){
-      if(!state.running) return;
-      frames++;
-      if(frames % 40 === 0) spawnItem();
-      // increase difficulty
-      items.forEach(it=>{ it.y += it.vy + Math.min(3, state.score/10); });
-      // collision
-      for(let i=items.length-1;i>=0;i--){
-        const it = items[i];
-        if(it.y > canvas.height){ items.splice(i,1); state.lives--; livesEl.textContent=state.lives; if(state.lives<=0) gameOver(); }
-        else if(it.y + it.size > basket.y && it.x > basket.x && it.x < basket.x + basket.w){ // caught
-          state.score += 10;
-          scoreEl.textContent = state.score;
-          items.splice(i,1);
-        }
-      }
-      draw();
-      requestAnimationFrame(updateGame);
-    }
+function moveBasket(){
+  if(keys['ArrowLeft']) basket.x = Math.max(0, basket.x - basket.speed);
+  if(keys['ArrowRight']) basket.x = Math.min(canvas.width - basket.w, basket.x + basket.speed);
+}
 
-    function draw(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      // draw items
-      ctx.font = '28px serif';
-      items.forEach(it=>{
-        ctx.fillText(it.emoji, it.x, it.y);
-      });
-      // draw basket (simple)
-      ctx.fillStyle = '#8b5a2b';
-      ctx.fillRect(basket.x, basket.y, basket.w, basket.h);
-      ctx.fillStyle = '#fff';
-      ctx.font = '18px sans-serif';
-      ctx.fillText('🧺', basket.x + basket.w/2 - 10, basket.y + 24);
-    }
+function gamePause(){ state.running=false; }
+function gameResume(){ if(!state.running){ state.running=true; requestAnimationFrame(updateGame);} }
+function gameOver(){ state.running=false; alert('Game Over! Puntaje: '+state.score); resetGame(); }
+function resetGame(){
+  items.length=0;
+  state.score=0;
+  state.lives=3;
+  scoreEl.textContent=0;
+  livesEl.textContent=3;
+}
 
-    // Controls
-    const keys = {};
-    window.addEventListener('keydown', e=>{ keys[e.key]=true; if(e.key==='ArrowLeft'||e.key==='ArrowRight') e.preventDefault(); moveBasket(); });
-    window.addEventListener('keyup', e=>{ keys[e.key]=false; });
+setInterval(()=>{ if(state.running){ moveBasket(); } }, 30);
 
-    function moveBasket(){
-      if(keys['ArrowLeft']) basket.x = Math.max(0, basket.x - basket.speed);
-      if(keys['ArrowRight']) basket.x = Math.min(canvas.width - basket.w, basket.x + basket.speed);
-    }
+/* ------------------ Historia ------------------ */
+const dialogue = [
+  {emotion:'feliz',text:'¡Hola a todos! Yo soy Vanessa, su amiga del mundo de la comida saludable. ¿Quieren saber algo súper importante?'},
+  {emotion:'curiosa',text:'¿Quién cree que comer saludable es solo comer verduras? ¿Sí? ¿No?'},
+  {emotion:'neutra',text:'Pues no. Comer saludable es como darle a tu cuerpo el mejor combustible.'},
+  {emotion:'dramatico',text:'Imaginen que su cuerpo es un carro de carreras. ¿Qué pasa si le pones gasolina chafa?'},
+  {emotion:'feliz',text:'Pero si le pones gasolina buena… ¡fiuuum!'},
+  {emotion:'feliz',text:'Les voy a presentar a los héroes de la alimentación.'},
+  {emotion:'feliz',text:'Frutas, verduras, agua, cereales, proteínas… ¡Todos ayudan!'},
+  {emotion:'tierna',text:'Cuando haces eso, el cuerpo dice “¡Gracias!”.'},
+  {emotion:'advertencia',text:'Pero ojo con la comida chatarra. No es mala, pero no es para diario.'},
+  {emotion:'comico',text:'Yo también me he comido una papita… o dos… o diez.'},
+  {emotion:'serio',text:'Si es diario, el cuerpo se cansa.'},
+  {emotion:'energia',text:'Consejos: agua, fruta, colores, moverse, dormir.'},
+  {emotion:'inspiradora',text:'Cada vez que comes saludable, te cuidas.'},
+  {emotion:'feliz',text:'¡Cuídense y coman rico! ¡Adiós, campeones!'}
+];
 
-    function gamePause(){ state.running=false; }
-    function gameResume(){ if(!state.running){ state.running=true; requestAnimationFrame(updateGame); }}
-    function gameOver(){ state.running=false; alert('Game Over! Puntaje: '+state.score); resetGame(); }
-    function resetGame(){ items.length=0; state.score=0; state.lives=3; scoreEl.textContent=0; livesEl.textContent=3; }
+const emotionToFile = {
+  'neutra':'assets/vanessa_neutra.png',
+  'feliz':'assets/vanessa_feliz.png',
+  'enojada':'assets/vanessa_enojada.png',
+  'triste':'assets/vanessa_triste.png',
+  'determinada':'assets/vanessa_determinada.png'
+};
 
-    // small game loop to read keyboard continuously
-    setInterval(()=>{ if(state.running){ moveBasket(); } }, 30);
+function emotionToSrc(e){ return emotionToFile[e] || emotionToFile['neutra']; }
 
-    // ---------------- Story dialog ----------------
-    const dialogue = [
-      {emotion:'feliz',text:'¡Hola, hola, hola a todos! ¡Qué alegría ver tantas caritas por aquí! Yo soy Vanessa, su amiga aventurera del mundo de la comida saludable. ¿Quieren saber algo súper importante?'} ,
-      {emotion:'curiosa',text:'A ver, a ver… levante la mano quien cree que comer saludable es solo comer verduras. ¿Sí? ¿No? ¿Tal vez?'},
-      {emotion:'neutra',text:'Bueno… ¡pues no! Comer saludable es mucho más que eso. Es como darle a tu cuerpo el mejor combustible para ser la mejor versión de ti mismo.'},
-      {emotion:'dramatico',text:'Imaginen que su cuerpo es un carro de carreras. ¿Qué pasa si le ponemos gasolina chafa?'},
-      {emotion:'feliz',text:'Pero si le pones gasolina buena… ¡fiuuuuuum! ¡Avanza como un campeón! Cuando comen bien, tienen energía, piensan mejor, corren más rápido y se sienten más felices.'},
-      {emotion:'feliz',text:'Ahora sí, prepárense porque les voy a presentar a los héroes de la alimentación saludable.'},
-      {emotion:'feliz',text:'Las frutas: ¡los superhéroes de las vitaminas! Las verduras: ¡los guerreros fuertes! El agua: ¡el poder mágico! Cereales y semillas: ¡los velocistas! Proteínas: ¡los constructores!'},
-      {emotion:'tierna',text:'Cuando le das todo eso a tu cuerpo… él te dice: "¡Gracias! Hoy me siento increíble".'},
-      {emotion:'advertencia',text:'Peeero… también hay un equipo que no ayuda mucho: la comida chatarra. No digo que nunca la coman, pero si es diario, el cuerpo se siente cansado.'},
-      {emotion:'comico',text:'Yo también me he comido una papita por ahí… o dos… o diez. Ups.'},
-      {emotion:'serio',text:'Si la comemos todos los días, nuestro cuerpo empieza a sentirse cansado, lento y hasta triste.'},
-      {emotion:'energia',text:'¡Pero no se preocupen! Aquí van consejos: Toma más agua que refresco, pon una fruta en la mochila, come muchos colores, muévete y duerme suficiente.'},
-      {emotion:'inspiradora',text:'Cada vez que eliges comer algo saludable, estás cuidando de ti. Estás haciendo un acto de amor contigo mismo.'},
-      {emotion:'feliz',text:'Yo creo en ustedes. ¡Cuídense, coman rico, y vivan con mucha energía! ¡Adióóóós, campeones!'}
-    ];
+function mapEmotion(e){
+  const m = e.toLowerCase();
+  if(m.includes('feliz')||m.includes('energia')) return 'feliz';
+  if(m.includes('neutra')) return 'neutra';
+  if(m.includes('enoj')||m.includes('advert')) return 'enojada';
+  if(m.includes('triste')) return 'triste';
+  if(m.includes('determin')||m.includes('dramatico')||m.includes('serio')) return 'determinada';
+  return 'neutra';
+}
 
-    // Map emotion to filenames the user will provide. Fallback to neutral.
-    const emotionToFile = {
-      'neutra':'assets/vanessa_neutra.png',
-      'feliz':'assets/vanessa_feliz.png',
-      'enojada':'assets/vanessa_enojada.png',
-      'triste':'assets/vanessa_triste.png',
-      'determinada':'assets/vanessa_determinada.png'
-    };
+let diaIndex = 0;
+const charImg = document.getElementById('charImg');
+const balloon = document.getElementById('balloon');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
 
-    // For some dialogue entries we used custom emotion keys (like 'curiosa','dramatico') which will fallback to neutra
-    function emotionToSrc(e){ return emotionToFile[e] || emotionToFile['neutra']; }
+function renderDialog(){
+  const d = dialogue[diaIndex];
+  balloon.textContent = d.text;
+  charImg.src = emotionToSrc(mapEmotion(d.emotion));
+}
 
-    let diaIndex = 0;
-    const charImg = document.getElementById('charImg');
-    const balloon = document.getElementById('balloon');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+prevBtn.addEventListener('click', ()=>{ if(diaIndex>0) diaIndex--; renderDialog(); });
+nextBtn.addEventListener('click', ()=>{ if(diaIndex < dialogue.length-1) diaIndex++; renderDialog(); else alert('¡Fin de la historia!'); });
 
-    function renderDialog(){
-      const d = dialogue[diaIndex];
-      balloon.textContent = d.text;
-      charImg.src = emotionToSrc(mapEmotion(d.emotion));
-    }
+renderDialog();
 
-    // map some adjectives to the 5 provided emotion images when appropriate
-    function mapEmotion(e){
-      const m = e.toLowerCase();
-      if(m.includes('feliz')||m.includes('feliz')||m.includes('energia')) return 'feliz';
-      if(m.includes('neutra')||m.includes('neutro')) return 'neutra';
-      if(m.includes('enoj')||m.includes('advert')) return 'enojada';
-      if(m.includes('triste')) return 'triste';
-      if(m.includes('determin')||m.includes('dramatico')||m.includes('serio')) return 'determinada';
-      // defaults
-      return 'neutra';
-    }
+/* Ajuste responsive del canvas */
+function fitCanvas(){
+  const ratio = 820/420;
+  const maxW = Math.min(window.innerWidth - 80, 820);
+  canvas.width = maxW;
+  canvas.height = Math.round(maxW / ratio);
+  basket.y = canvas.height - 50;
+}
+window.addEventListener('resize', fitCanvas);
+fitCanvas();
 
-    prevBtn.addEventListener('click', ()=>{ if(diaIndex>0) diaIndex--; renderDialog(); });
-    nextBtn.addEventListener('click', ()=>{ if(diaIndex < dialogue.length-1) diaIndex++; renderDialog(); else alert('¡Fin de la historia!'); });
+resetGame();
+</script>
 
-    renderDialog();
-
-    // ----------------- Accessibility / small features -----------------
-    // Resize canvas responsively
-    function fitCanvas(){ const ratio = 820/420; const maxW = Math.min(window.innerWidth - 80, 820); canvas.width = maxW; canvas.height = Math.round(maxW/ratio); basket.y = canvas.height - 50; }
-    window.addEventListener('resize', fitCanvas); fitCanvas();
-
-    // Start game paused until user switches to game screen
-    resetGame();
-
-  </script>
 </body>
 </html>
