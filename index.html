@@ -129,7 +129,7 @@ section { display: none; }
 }
 
 /* -----------------------------------------
-   JUEGO #1 ORIGINAL
+   JUEGO #1 ORIGINAL (SIN CAMBIOS)
 ----------------------------------------- */
 #game-screen {
     display: none;
@@ -157,16 +157,36 @@ section { display: none; }
     border-radius: 12px;
     font-size: 1.1rem;
     cursor: pointer;
-    margin-top: 20px;
 }
 
 /* -----------------------------------------
-   JUEGO #2 – CACHAR FRUTAS (simple)
+   JUEGO #2 — CACHAR FRUTAS (MODIFICADO)
 ----------------------------------------- */
 #cachar-frutas {
     display:none;
     text-align:center;
-    margin-top:30px;
+    margin-top:20px;
+    position: relative;
+    height: 500px;
+}
+
+#zona-juego {
+    width: 350px;
+    height: 420px;
+    background: #fff8e1;
+    margin: 0 auto;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px #0003;
+}
+
+#mensaje-cachar {
+    font-size: 1.3rem;
+    color: #4caf50;
+    height: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 #canasta {
@@ -174,17 +194,23 @@ section { display: none; }
     height:60px;
     background:#795548;
     border-radius:10px;
-    position:relative;
-    margin:0 auto;
+    position:absolute;
+    bottom:20px;
+    left:130px;
 }
 
 .fruta {
     position:absolute;
-    font-size:35px;
+    font-size:40px;
+}
+
+/* botón salir más abajo */
+#btn-salir-cachar {
+    margin-top: 25px;
 }
 
 /* -----------------------------------------
-   JUEGO #3 – MEMORAMA
+   JUEGO #3 — MEMORAMA (SIN CAMBIOS)
 ----------------------------------------- */
 #memorama {
     display:none;
@@ -268,17 +294,24 @@ section { display: none; }
 </section>
 
 <!-- ============================
-       JUEGO 2: CACHAR FRUTAS
+       JUEGO 2 — CACHAR FRUTAS
+       (MODIFICADO)
 ============================ -->
 <section id="cachar-frutas">
   <h1>Cachar Frutas</h1>
   <p>Usa el mouse para mover la canasta</p>
-  <div id="canasta"></div>
-  <button class="btn-exit" onclick="mostrarMenu()">Salir</button>
+
+  <div id="mensaje-cachar"></div>
+
+  <div id="zona-juego">
+      <div id="canasta"></div>
+  </div>
+
+  <button id="btn-salir-cachar" class="btn-exit" onclick="mostrarMenu()">Salir</button>
 </section>
 
 <!-- ============================
-       JUEGO 3: MEMORAMA
+       JUEGO 3 — MEMORAMA
 ============================ -->
 <section id="memorama">
   <h1>Memorama Saludable</h1>
@@ -288,10 +321,38 @@ section { display: none; }
 
 <script>
 /* ===========================================
-      DIALOGOS DE VANESSA
+      DIALOGOS DE VANESSA (SIN CAMBIOS)
 =========================================== */
 
-const dialogosVanessa = [ { emocion:"feliz", texto:"¡Hola, hola, hola a todos! ¡Qué emoción verlos aquí! Soy Vanessa, su amiga aventurera del mundo de la comida saludable."}, { emocion:"determinada", texto:"Hoy les voy a compartir algo súper importante que puede cambiar su vida. ¿Listos? ¡Eso quería escuchar!"}, { emocion:"neutra", texto:"Muchos creen que comer saludable es solo verdura... pero no es así."}, { emocion:"determinada", texto:"Comer bien es darle a tu cuerpo el mejor combustible para ser la mejor versión de ti."}, { emocion:"feliz", texto:"Imaginen que su cuerpo es un carro de carreras: poderoso y veloz."}, { emocion:"triste", texto:"Si le pones gasolina chafa… el carro se apaga."}, { emocion:"feliz", texto:"Pero si le das gasolina buena… ¡fiummm! ¡Corre increíble! Igual ustedes cuando comen bien."}, { emocion:"feliz", texto:"Tienen energía, piensan mejor, corren más y están felices."}, { emocion:"feliz", texto:"Les presentaré a los héroes de la alimentación saludable."}, { emocion:"determinada", texto:"Frutas = vitaminas. Verduras = fuerza. Agua = poder mágico."}, { emocion:"determinada", texto:"Cereales = energía. Proteínas = músculos."}, { emocion:"feliz", texto:"Cuando comes esto, tu cuerpo dice: ¡Gracias! Me siento increíble."}, { emocion:"enojada", texto:"Pero cuidado: la comida chatarra no ayuda mucho."}, { emocion:"neutra", texto:"No digo que nunca la comas, solo no diario."}, { emocion:"feliz", texto:"Yo también he comido papitas… o diez."}, { emocion:"triste", texto:"Pero si es diario, tu cuerpo se pone lento y triste."}, { emocion:"determinada", texto:"Consejos poderosos:"}, { emocion:"feliz", texto:"Toma más agua que refresco."}, { emocion:"feliz", texto:"Lleva fruta en tu mochila."}, { emocion:"feliz", texto:"Come colores: rojo, verde, naranja, amarillo."}, { emocion:"determinada", texto:"Muévete: corre, baila, juega… ¡lo que quieras!"}, { emocion:"neutra", texto:"Duerme bien y suficiente."}, { emocion:"feliz", texto:"Tu cuerpo es único y especial."}, { emocion:"neutra", texto:"Cada comida saludable es amor propio."}, { emocion:"determinada", texto:"Puedes ser fuerte, inteligente y creativo."}, { emocion:"feliz", texto:"Yo creo en ti."}, { emocion:"feliz", texto:"¡Gracias por escucharme! ¡Coman rico y vivan con energía!"} ]; 
+const dialogosVanessa = [
+  { emocion:"feliz", texto:"¡Hola, hola, hola a todos! ¡Qué emoción verlos aquí! Soy Vanessa, su amiga aventurera del mundo de la comida saludable."},
+  { emocion:"determinada", texto:"Hoy les voy a compartir algo súper importante que puede cambiar su vida. ¿Listos? ¡Eso quería escuchar!"},
+  { emocion:"neutra", texto:"Muchos creen que comer saludable es solo verdura... pero no es así."},
+  { emocion:"determinada", texto:"Comer bien es darle a tu cuerpo el mejor combustible para ser la mejor versión de ti."},
+  { emocion:"feliz", texto:"Imaginen que su cuerpo es un carro de carreras: poderoso y veloz."},
+  { emocion:"triste", texto:"Si le pones gasolina chafa… el carro se apaga."},
+  { emocion:"feliz", texto:"Pero si le das gasolina buena… ¡fiummm! ¡Corre increíble! Igual ustedes cuando comen bien."},
+  { emocion:"feliz", texto:"Tienen energía, piensan mejor, corren más y están felices."},
+  { emocion:"feliz", texto:"Les presentaré a los héroes de la alimentación saludable."},
+  { emocion:"determinada", texto:"Frutas = vitaminas. Verduras = fuerza. Agua = poder mágico."},
+  { emocion:"determinada", texto:"Cereales = energía. Proteínas = músculos."},
+  { emocion:"feliz", texto:"Cuando comes esto, tu cuerpo dice: ¡Gracias! Me siento increíble."},
+  { emocion:"enojada", texto:"Pero cuidado: la comida chatarra no ayuda mucho."},
+  { emocion:"neutra", texto:"No digo que nunca la comas, solo no diario."},
+  { emocion:"feliz", texto:"Yo también he comido papitas… o diez."},
+  { emocion:"triste", texto:"Pero si es diario, tu cuerpo se pone lento y triste."},
+  { emocion:"determinada", texto:"Consejos poderosos:"},
+  { emocion:"feliz", texto:"Toma más agua que refresco."},
+  { emocion:"feliz", texto:"Lleva fruta en tu mochila."},
+  { emocion:"feliz", texto:"Come colores: rojo, verde, naranja, amarillo."},
+  { emocion:"determinada", texto:"Muévete: corre, baila, juega… ¡lo que quieras!"},
+  { emocion:"neutra", texto:"Duerme bien y suficiente."},
+  { emocion:"feliz", texto:"Tu cuerpo es único y especial."},
+  { emocion:"neutra", texto:"Cada comida saludable es amor propio."},
+  { emocion:"determinada", texto:"Puedes ser fuerte, inteligente y creativo."},
+  { emocion:"feliz", texto:"Yo creo en ti."},
+  { emocion:"feliz", texto:"¡Gracias por escucharme! ¡Coman rico y vivan con energía!"}
+];
 
 let indice = 0;
 
@@ -334,7 +395,7 @@ function escribirEfecto(texto, elemento){
 }
 
 /* ===========================================
-                INFORMACIÓN
+                INFORMACIÓN (SIN CAMBIOS)
 =========================================== */
 
 const informacionApp = `
@@ -379,7 +440,7 @@ function mostrarInfo(){
 }
 
 /* ===========================================
-                JUEGO 1
+                JUEGO 1 (SIN CAMBIOS)
 =========================================== */
 const gameData = [
   { q:"¿Qué es más saludable?", o1:"Manzana", o2:"Dulces", correct:true },
@@ -420,8 +481,9 @@ function salirJuego(){
 }
 
 /* ===========================================
-                JUEGO 2 – CACHAR FRUTAS
+       JUEGO 2 – CACHAR FRUTAS (MODIFICADO)
 =========================================== */
+
 let frutaActiva = null;
 let caer;
 
@@ -432,11 +494,16 @@ function abrirCachar(){
 }
 
 function iniciarCachar(){
-  const area = document.getElementById("cachar-frutas");
+  const zona = document.getElementById("zona-juego");
   const canasta = document.getElementById("canasta");
 
-  area.onmousemove = e => {
-      canasta.style.left = e.clientX - 45 + "px";
+  document.getElementById("mensaje-cachar").innerText = "";
+
+  zona.onmousemove = e => {
+      const rect = zona.getBoundingClientRect();
+      let x = e.clientX - rect.left - 45;
+      x = Math.max(0, Math.min(260, x));
+      canasta.style.left = x + "px";
   };
 
   crearFruta();
@@ -447,17 +514,19 @@ function crearFruta(){
   const fruta = document.createElement("div");
   fruta.className = "fruta";
   fruta.innerHTML = frutas[Math.floor(Math.random()*frutas.length)];
-  fruta.style.left = Math.random()*300 + "px";
+  fruta.style.left = Math.random()*260 + "px";
   fruta.style.top = "0px";
-  document.getElementById("cachar-frutas").appendChild(fruta);
+
+  document.getElementById("zona-juego").appendChild(fruta);
   frutaActiva = fruta;
+
   caer = setInterval(()=>moverFruta(),50);
 }
 
 function moverFruta(){
   const canasta = document.getElementById("canasta");
   let y = parseInt(frutaActiva.style.top);
-  frutaActiva.style.top = (y+8)+"px";
+  frutaActiva.style.top = (y+6)+"px";
 
   const frutaRect = frutaActiva.getBoundingClientRect();
   const canastaRect = canasta.getBoundingClientRect();
@@ -466,22 +535,28 @@ function moverFruta(){
      frutaRect.left >= canastaRect.left &&
      frutaRect.right <= canastaRect.right){
 
-    alert("¡La atrapaste!");
+    mostrarMensaje("¡Bien atrapada!");
     frutaActiva.remove();
     clearInterval(caer);
-    crearFruta();
+    setTimeout(()=>crearFruta(), 600);
   }
 
-  if(y > 450){
-    alert("Se cayó... intenta otra vez.");
+  if(y > 370){
+    mostrarMensaje("Se cayó...");
     frutaActiva.remove();
     clearInterval(caer);
-    crearFruta();
+    setTimeout(()=>crearFruta(), 600);
   }
 }
 
+function mostrarMensaje(msg){
+  const m = document.getElementById("mensaje-cachar");
+  m.innerText = msg;
+  setTimeout(()=>{ m.innerText = ""; }, 1200);
+}
+
 /* ===========================================
-                JUEGO 3 – MEMORAMA
+                JUEGO 3 — MEMORAMA (SIN CAMBIOS)
 =========================================== */
 
 const frutasMemorama = ["🍎","🍌","🍐","🍓","🍑","🍇"];
