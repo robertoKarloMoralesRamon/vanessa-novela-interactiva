@@ -1,245 +1,214 @@
-<!-- index.html COMPLETAMENTE REPARADO Y FUNCIONAL -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vanessa - Novela Interactiva</title>
-  <style>
-    :root{
-      --green:#9be89b;
-      --orange:#ff8c2b;
-      --card-bg: rgba(255,255,255,0.9);
-      --accent:#2b8a3e;
-      --ui-radius:14px;
-      font-family: 'Cooper Black','Arial Black',Impact,sans-serif;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--green);height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui}
-
-    /* Pantalla Inicio */
-    #startScreen{width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    #startButton{background:var(--orange);color:white;padding:24px 40px;font-size:32px;border:none;border-radius:20px;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,0.25)}
-
-    /* App */
-    #appShell{display:none;width:100%;max-width:1000px;height:100vh;background:white;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.2)}
-    header{background:var(--accent);color:white;height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-    nav button{background:transparent;border:2px solid rgba(255,255,255,0.3);color:white;padding:6px 12px;border-radius:10px;cursor:pointer}
-
-    main{padding:18px;height:calc(100vh - 80px);overflow:auto}
-    .screen{display:none}
-    .active{display:block}
-
-    /* Juego */
-    #game-canvas{background:#ecffe9;border-radius:12px;border:4px solid #c6eec0;margin:auto;display:block}
-
-    /* Info */
-    .info-card{background:var(--card-bg);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-
-    /* Historia */
-    .story-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .char-img{width:260px;height:260px;object-fit:contain;border-radius:18px;border:6px solid #fff;background:transparent}
-    .balloon{max-width:760px;background:white;border-radius:18px;padding:16px;font-size:18px;box-shadow:0 8px 18px rgba(0,0,0,0.1)}
-    .controls{display:flex;gap:8px}
-    .btn{padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:white;cursor:pointer}
-  </style>
+<meta charset="UTF-8">
+<title>Alimentación Saludable - Mentes Brillantes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+ body { font-family: Arial, sans-serif; background: #f0f8ff; margin:0; padding:0; }
+ h1 { font-size: 2.2rem; text-align:center; margin-top:30px; }
+ h2 { font-size: 1.4rem; }
+ #inicio { text-align:center; padding:40px; }
+ .btn { padding:15px 30px; background:#4caf50; color:#fff; border:none; border-radius:12px; font-size:1.2rem; cursor:pointer; }
+ #menu { display:none; text-align:center; padding:40px; }
+ #dialogoSection { display:none; padding:20px; text-align:center; }
+ #dialogoImg { width:280px; }
+ #globo { max-width:80%; margin:20px auto; padding:20px; background:white; border-radius:20px; font-size:1.3rem; line-height:1.4; }
+ #info { display:none; padding:25px; font-size:1.2rem; }
+</style>
 </head>
-
 <body>
-  <!-- Pantalla Inicio -->
-  <div id="startScreen">
-    <button id="startButton">Iniciar</button>
-  </div>
 
-  <!-- App -->
-  <div id="appShell">
-    <header>
-      <h1>Vanessa - Comiendo con Energía</h1>
-      <nav>
-        <button data-screen="game">Juegos</button>
-        <button data-screen="info">Información</button>
-        <button data-screen="story">Historia</button>
-      </nav>
-    </header>
+<!-- PANTALLA INICIO -->
+<section id="inicio">
+  <h1>Alimentación saludable<br>Mentes Brillantes</h1>
+  <h3>Aplicación interactiva</h3>
+  <button class="btn" onclick="mostrarMenu()">Iniciar</button>
+</section>
 
-    <main>
-      <!-- Juego -->
-      <section id="game" class="screen">
-        <div class="score-board">
-          Puntaje: <span id="score">0</span> — Vidas: <span id="lives">3</span>
-        </div>
-        <canvas id="game-canvas" width="820" height="420"></canvas>
-      </section>
+<!-- MENU PRINCIPAL -->
+<section id="menu">
+  <h2>Menú principal</h2>
+  <button class="btn" onclick="iniciarDialogos()">Historia con Vanessa</button><br><br>
+  <button class="btn" onclick="mostrarInfo()">Información</button><br><br>
+</section>
 
-      <!-- Información -->
-      <section id="info" class="screen">
-        <div class="info-card">
-          <h2>¿Por qué comer saludable?</h2>
-          <p>Comer alimentos variados le da energía a tu cuerpo para aprender y jugar.</p>
-        </div>
-      </section>
+<!-- DIALOGOS -->
+<section id="dialogoSection">
+  <img id="dialogoImg" src="feliz.png">
+  <div id="globo"></div>
+  <button class="btn" onclick="siguienteDialogo()">Siguiente</button>
+  <br><br>
+  <button class="btn" onclick="volverMenu()">Volver al menú</button>
+</section>
 
-      <!-- Historia -->
-      <section id="story" class="screen">
-        <div class="story-wrap">
-          <img id="charImg" class="char-img" src="assets/vanessa_neutra.png">
-          <div id="balloon" class="balloon">Pulsa Siguiente para comenzar.</div>
-          <div class="controls">
-            <button id="prevBtn" class="btn">Anterior</button>
-            <button id="nextBtn" class="btn">Siguiente</button>
-          </div>
-        </div>
-      </section>
+<!-- INFORMACIÓN -->
+<section id="info"></section>
 
-    </main>
+<script>
+// ---------------------
+//     DIALOGOS
+// ---------------------
+
+const dialogosVanessa = [
+ { emocion:"feliz", texto:"¡Hola, hola, hola a todos! ¡Qué alegría ver tantas caritas por aquí! Yo soy Vanessa, su amiga aventurera del mundo de la comida saludable."},
+ { emocion:"determinada", texto:"Y hoy… ¡les voy a contar algo súper importante que puede cambiar su vida para siempre! ¿Quieren saberlo? ¡Eso quería escuchar!"},
+ { emocion:"neutra", texto:"A ver… muchos creen que comer saludable es solo verduras. ¡Pues no! Es mucho más que eso."},
+ { emocion:"determinada", texto:"Es como darle a tu cuerpo el mejor combustible para ser la mejor versión de ti mismo."},
+ { emocion:"feliz", texto:"Imaginen que su cuerpo es un carro de carreras: poderoso, brillante y veloz."},
+ { emocion:"triste", texto:"¿Qué pasaría si le ponemos gasolina chafa? El carro falla, se apaga o no avanza."},
+ { emocion:"feliz", texto:"Pero con gasolina buena… ¡fiuuum! ¡Corre increíble! Igual ustedes cuando comen bien."},
+ { emocion:"feliz", texto:"Tienen energía, piensan mejor, corren más y son más felices."},
+ { emocion:"feliz", texto:"Ahora les presentaré a los héroes de la alimentación saludable"},
+ { emocion:"determinada", texto:"Frutas: vitaminas. Verduras: fuerza. Agua: poder mágico."},
+ { emocion:"determinada", texto:"Cereales: energía. Proteínas: músculos fuertes."},
+ { emocion:"feliz", texto:"Cuando comes todo eso, tu cuerpo dice: ‘¡Gracias! Hoy me siento increíble’."},
+ { emocion:"enojada", texto:"Pero cuidado: la comida chatarra no ayuda mucho."},
+ { emocion:"neutra", texto:"No digo que nunca la comas, pero no diario."},
+ { emocion:"feliz", texto:"Yo también he comido papitas… o diez. Ups."},
+ { emocion:"triste", texto:"Pero si la comemos diario, el cuerpo se siente lento y triste."},
+ { emocion:"determinada", texto:"Aquí van consejos poderosos:"},
+ { emocion:"feliz", texto:"Toma más agua que refresco."},
+ { emocion:"feliz", texto:"Lleva una fruta en tu mochila."},
+ { emocion:"feliz", texto:"Come colores: rojo, verde, naranja, amarillo."},
+ { emocion:"determinada", texto:"Muévete: corre, baila, camina… ¡lo que quieras!"},
+ { emocion:"neutra", texto:"Duerme rico y suficiente."},
+ { emocion:"feliz", texto:"Tu cuerpo es único, especial y maravilloso."},
+ { emocion:"neutra", texto:"Cada comida saludable es un acto de amor propio."},
+ { emocion:"determinada", texto:"Pueden ser fuertes, inteligentes y creativos."},
+ { emocion:"feliz", texto:"Yo creo en ustedes."},
+ { emocion:"feliz", texto:"Gracias por escucharme. ¡Coman rico y vivan con energía!"}
+];
+
+let indice = 0;
+const imgElement = document.getElementById("dialogoImg");
+const globo = document.getElementById("globo");
+
+function mostrarMenu(){
+ document.getElementById("inicio").style.display = "none";
+ document.getElementById("menu").style.display = "block";
+}
+
+function iniciarDialogos(){
+ indice = 0;
+ document.getElementById("menu").style.display = "none";
+ document.getElementById("dialogoSection").style.display = "block";
+ mostrarDialogo();
+}
+
+function mostrarDialogo(){
+ let d = dialogosVanessa[indice];
+ imgElement.src = d.emocion + ".png"; // Usa solo los PNG existentes
+ globo.innerHTML = "";
+ escribirEfecto(d.texto, globo);
+}
+
+function siguienteDialogo(){
+ indice++;
+ if(indice >= dialogosVanessa.length){ volverMenu(); return; }
+ mostrarDialogo();
+}
+
+function volverMenu(){
+ document.getElementById("dialogoSection").style.display = "none";
+ document.getElementById("menu").style.display = "block";
+}
+
+// EFECTO DE TEXTO
+function escribirEfecto(texto, elemento){
+ let i = 0;
+ let interval = setInterval(()=>{
+  elemento.innerHTML = texto.slice(0, i);
+  i++;
+  if(i > texto.length){ clearInterval(interval); }
+ }, 25);
+}
+
+// INFORMACIÓN
+const informacionApp = `
+<h1>Información importante</h1>
+<h2>¿Por qué comer saludable?</h2>
+<p>Tu cuerpo necesita combustible de calidad para funcionar bien: energía, concentración, fuerza y buen ánimo.</p>
+<h2>Beneficios</h2>
+<ul>
+<li>Más energía diaria</li>
+<li>Mejor memoria y concentración</li>
+<li>Mejor sueño</li>
+<li>Mejor estado de ánimo</li>
+</ul>
+<h2>Consejos diarios</h2>
+<ul>
+<li>Tomar 6–8 vasos de agua</li>
+<li>Comer frutas y verduras todos los días</li>
+<li>Dormir 8–10 horas</li>
+<li>Hacer 30 minutos de actividad física</li>
+</ul>`;
+
+function mostrarInfo(){
+ document.getElementById("menu").style.display="none";
+ let area = document.getElementById("info");
+ area.style.display = "block";
+ area.innerHTML = informacionApp + '<br><br><button class="btn" onclick="volverInfoMenu()">Volver</button>';
+}
+
+function volverInfoMenu(){
+ document.getElementById("info").style.display="none";
+ document.getElementById("menu").style.display="block";
+}
+</script>
+  <!-- JUEGO SIMPLE AGREGADO -->
+  <div id="game-screen" class="screen hidden">
+    <h1 class="title">Juego: Adivina lo Saludable</h1>
+    <p id="game-question" style="font-size:24px; margin-bottom:20px;"></p>
+    <button class="btn-secondary" onclick="answer(true)">Opción 1</button>
+    <button class="btn-secondary" onclick="answer(false)">Opción 2</button>
+    <br>
+    <button class="btn-exit" onclick="exitGame()">Salir</button>
   </div>
 
 <script>
-/******************************
-  INICIO: BOTÓN FUNCIONAL
-******************************/
-document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById("startButton");
-  const startScreen = document.getElementById("startScreen");
-  const appShell = document.getElementById("appShell");
-
-  startBtn.addEventListener("click", () => {
-    startScreen.style.display = "none";
-    appShell.style.display = "block";
-    showScreen("game");
-  });
-});
-
-/******************************
-  NAVEGACIÓN DE PANTALLAS
-******************************/
-const navButtons = document.querySelectorAll("nav button");
-const screens = document.querySelectorAll('.screen');
-
-function showScreen(id){
-  screens.forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-navButtons.forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.screen)));
-
-/******************************
-        JUEGO CANASTA
-******************************/
-const canvas = document.getElementById('game-canvas');
-const ctx = canvas.getContext('2d');
-let scoreEl = document.getElementById('score');
-let livesEl = document.getElementById('lives');
-
-let state = {running:false, score:0, lives:3};
-const basket = {x:400, y:380, w:100, h:30, speed:8};
-let items = [];
-const fruits = ['🍎','🍌','🍇','🥕','🥦'];
-
-function spawnItem(){
-  const emoji = fruits[Math.floor(Math.random()*fruits.length)];
-  items.push({x:Math.random()*760+20, y:-40, vy:2, emoji});
-}
-
-function updateGame(){
-  if(!state.running) return;
-  if(Math.random()<0.03) spawnItem();
-
-  items.forEach(it => it.y += it.vy);
-
-  for(let i=items.length-1;i>=0;i--){
-    let it = items[i];
-    if(it.y > canvas.height){
-      items.splice(i,1);
-      state.lives--; livesEl.textContent = state.lives;
-      if(state.lives<=0) return gameOver();
-    }
-    if(it.x > basket.x && it.x < basket.x + basket.w && it.y > basket.y){
-      items.splice(i,1);
-      state.score += 10;
-      scoreEl.textContent = state.score;
-    }
-  }
-
-  draw();
-  requestAnimationFrame(updateGame);
-}
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.font = "28px serif";
-  items.forEach(it => ctx.fillText(it.emoji, it.x, it.y));
-
-  ctx.fillStyle = "#794d1a";
-  ctx.fillRect(basket.x, basket.y, basket.w, basket.h);
-}
-
-let keys={};
-window.addEventListener("keydown", e=>{ keys[e.key]=true; });
-window.addEventListener("keyup", e=>{ keys[e.key]=false; });
-
-setInterval(()=>{
-  if(keys['ArrowLeft']) basket.x = Math.max(0, basket.x - basket.speed);
-  if(keys['ArrowRight']) basket.x = Math.min(canvas.width-basket.w, basket.x + basket.speed);
-}, 30);
-
-function gameOver(){
-  state.running=false;
-  alert("Game Over — Puntaje: " + state.score);
-  state.score=0; state.lives=3;
-  items=[];
-  scoreEl.textContent=0;
-  livesEl.textContent=3;
-}
-
-function gameResume(){ state.running=true; updateGame(); }
-showScreen('game'); gameResume();
-
-/******************************
-        HISTORIA VANESSA
-******************************/
-const dialogue=[
-  {emotion:'feliz',text:'¡Hola! Soy Vanessa y hoy aprenderemos a comer con energía.'},
-  {emotion:'feliz',text:'Las frutas dan vitaminas, las verduras fuerza y el agua energía.'},
-  {emotion:'serio',text:'La comida chatarra está bien a veces, pero no todos los días.'},
-  {emotion:'feliz',text:'¡Tú puedes hacer elecciones saludables!'}
+let gameIndex = 0;
+const gameData = [
+  { q: "¿Qué es más saludable?", o1: "Manzana", o2: "Dulces", correct: true },
+  { q: "¿Qué es mejor para hidratarte?", o1: "Refresco", o2: "Agua", correct: false },
+  { q: "¿Qué te da más energía real?", o1: "Semillas", o2: "Papas fritas", correct: true }
 ];
 
-const emotionToFile={
-  'neutra':'assets/vanessa_neutra.png',
-  'feliz':'assets/vanessa_feliz.png',
-  'enojada':'assets/vanessa_enojada.png',
-  'triste':'assets/vanessa_triste.png',
-  'determinada':'assets/vanessa_determinada.png'
-};
-
-function mapEmotion(e){
-  if(e.includes('feliz')) return 'feliz';
-  if(e.includes('serio')) return 'determinada';
-  return 'neutra';
+function openGame() {
+  document.getElementById("menu-screen").classList.add("hidden");
+  document.getElementById("game-screen").classList.remove("hidden");
+  gameIndex = 0;
+  loadQuestion();
 }
 
-let diaIndex=0;
-const charImg = document.getElementById('charImg');
-const balloon = document.getElementById('balloon');
-
-function renderDialog(){
-  const d = dialogue[diaIndex];
-  balloon.textContent = d.text;
-  charImg.src = emotionToFile[ mapEmotion(d.emotion) ];
+function loadQuestion() {
+  const q = gameData[gameIndex];
+  document.getElementById("game-question").innerText = q.q;
+  const buttons = document.querySelectorAll('#game-screen button');
+  buttons[0].innerText = q.o1;
+  buttons[1].innerText = q.o2;
 }
 
-renderDialog();
+function answer(option) {
+  const correct = gameData[gameIndex].correct;
+  if (option === correct) {
+    alert("¡Correcto! Muy bien.");
+  } else {
+    alert("Ups, intenta de nuevo.");
+  }
+  gameIndex++;
+  if (gameIndex >= gameData.length) {
+    alert("¡Terminaste el juego!");
+    exitGame();
+  } else {
+    loadQuestion();
+  }
+}
 
-document.getElementById('prevBtn').addEventListener('click',()=>{
-  if(diaIndex>0) diaIndex--;
-  renderDialog();
-});
-
-document.getElementById('nextBtn').addEventListener('click',()=>{
-  if(diaIndex<dialogue.length-1) diaIndex++;
-  renderDialog();
-});
+function exitGame() {
+  document.getElementById("game-screen").classList.add("hidden");
+  document.getElementById("menu-screen").classList.remove("hidden");
+}
 </script>
 
 </body>
